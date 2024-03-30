@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/wgzhulin/golang-study-with-test/web-server/grpc-demo/helloworld/helloworld"
+	"github.com/wgzhulin/gostudy/web-server/grpc-demo/helloworld/helloworld"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

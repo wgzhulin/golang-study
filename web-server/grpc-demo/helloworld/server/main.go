@@ -5,7 +5,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/wgzhulin/golang-study-with-test/web-server/grpc-demo/helloworld/helloworld"
+	"github.com/wgzhulin/gostudy/web-server/grpc-demo/helloworld/helloworld"
 	"google.golang.org/grpc"
 )
 

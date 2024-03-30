@@ -1,5 +1,4 @@
-module github.com/wgzhulin/golang-study-with-test
-
+module github.com/wgzhulin/gostudy
 go 1.18
 
 require (

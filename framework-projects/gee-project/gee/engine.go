@@ -11,9 +11,11 @@ func New() *Engine {
 }
 
 func (e *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	pattern := req.Method + "-" + req.URL.Path
 	ctx := newContext(w, req)
-	e.route.handle(pattern, ctx)
+	ctx.Method = req.Method
+	ctx.Path = req.URL.Path
+
+	e.route.handle(ctx)
 }
 
 func (e *Engine) GET(pattern string, handler HandlerFunc) {

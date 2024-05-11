@@ -14,6 +14,12 @@ type Context struct {
 	Writer http.ResponseWriter
 	Req    *http.Request
 
+	// request info
+	Path   string            // URL: /hello/maodou
+	Method string            // GET/POST/DELETE等
+	Params map[string]string // URL: /hello/:name  --> { name: value }
+
+	// response info
 	statusCode int
 }
 
@@ -67,4 +73,8 @@ func (c *Context) PostForm(key string) string {
 
 func (c *Context) Query(key string) string {
 	return c.Req.URL.Query().Get(key)
+}
+
+func (c *Context) Param(key string) string {
+	return c.Params[key]
 }

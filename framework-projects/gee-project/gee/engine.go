@@ -3,11 +3,15 @@ package gee
 import "net/http"
 
 type Engine struct {
-	route Router
+	RouterGroup
+	route  Router
+	groups []*RouterGroup
 }
 
 func New() *Engine {
-	return &Engine{route: newRouter()}
+	e := &Engine{route: newRouter()}
+	e.engine = e
+	return e
 }
 
 func (e *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
@@ -16,12 +20,4 @@ func (e *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	ctx.Path = req.URL.Path
 
 	e.route.handle(ctx)
-}
-
-func (e *Engine) GET(pattern string, handler HandlerFunc) {
-	e.route.addRoute("GET", pattern, handler)
-}
-
-func (e *Engine) POST(pattern string, handler HandlerFunc) {
-	e.route.addRoute("POST", pattern, handler)
 }

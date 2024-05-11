@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"gostudy/framework-projects/gee-project/gee"
 	"net/http"
 )
@@ -21,6 +22,11 @@ func main() {
 			"username": ctx.PostForm("username"),
 			"password": ctx.PostForm("password"),
 		})
+	})
+
+	v2 := g.Group("/v2")
+	v2.GET("/hello", func(ctx *gee.Context) {
+		ctx.HTML(http.StatusOK, fmt.Sprintf("<h1>Hello %s</h1>", ctx.Query("name")))
 	})
 
 	http.ListenAndServe(":8080", g)

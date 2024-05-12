@@ -3,9 +3,14 @@ package gee
 import "log"
 
 type RouterGroup struct {
-	prefix string
-	parent *RouterGroup
-	engine *Engine
+	prefix      string
+	parent      *RouterGroup
+	engine      *Engine
+	middlewares []HandlerFunc
+}
+
+func (r *RouterGroup) Use(middlewares ...HandlerFunc) {
+	r.middlewares = middlewares
 }
 
 func (r *RouterGroup) Group(prefix string) *RouterGroup {

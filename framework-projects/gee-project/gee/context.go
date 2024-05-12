@@ -20,26 +20,31 @@ type Context struct {
 	Params map[string]string // URL: /hello/:name  --> { name: value }
 
 	// response info
-	statusCode int
+	StatusCode int
+
+	middlewares []HandlerFunc
+	idx         int // init -1, no handler func exec
 }
 
 func newContext(w http.ResponseWriter, req *http.Request) *Context {
 	return &Context{
 		Writer: w,
 		Req:    req,
+
+		idx: -1,
 	}
 }
 
 func (c *Context) HTML(code int, html string) {
 	c.SetHeader("Content-Type", "text/html")
-	c.StatusCode(code)
+	c.Status(code)
 
 	_, _ = c.Writer.Write([]byte(html))
 }
 
 func (c *Context) JSON(code int, obj interface{}) {
 	c.SetHeader("Content-Type", "application/json")
-	c.StatusCode(code)
+	c.Status(code)
 
 	encoder := json.NewEncoder(c.Writer)
 	if err := encoder.Encode(obj); err != nil {
@@ -49,18 +54,18 @@ func (c *Context) JSON(code int, obj interface{}) {
 
 func (c *Context) String(code int, str string, format any) {
 	c.SetHeader("Content-Type", "text/plain")
-	c.StatusCode(code)
+	c.Status(code)
 	_, _ = c.Writer.Write([]byte(fmt.Sprintf(str, format)))
 }
 
 func (c *Context) Data(code int, b []byte) {
-	c.StatusCode(code)
+	c.Status(code)
 	_, _ = c.Writer.Write(b)
 }
 
-func (c *Context) StatusCode(code int) {
-	c.statusCode = code
-	c.Writer.WriteHeader(c.statusCode)
+func (c *Context) Status(code int) {
+	c.StatusCode = code
+	c.Writer.WriteHeader(c.StatusCode)
 }
 
 func (c *Context) SetHeader(key, value string) {
@@ -77,4 +82,12 @@ func (c *Context) Query(key string) string {
 
 func (c *Context) Param(key string) string {
 	return c.Params[key]
+}
+
+func (c *Context) Next() {
+	c.idx++
+
+	for ; c.idx < len(c.middlewares); c.idx++ {
+		c.middlewares[c.idx](c)
+	}
 }

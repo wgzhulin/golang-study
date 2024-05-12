@@ -25,9 +25,10 @@ func main() {
 	})
 
 	v2 := g.Group("/v2")
+	v2.Use(gee.Logger()) // 使用中间件
 	v2.GET("/hello", func(ctx *gee.Context) {
 		ctx.HTML(http.StatusOK, fmt.Sprintf("<h1>Hello %s</h1>", ctx.Query("name")))
 	})
 
-	http.ListenAndServe(":8080", g)
+	_ = http.ListenAndServe(":8080", g)
 }

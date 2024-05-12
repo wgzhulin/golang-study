@@ -62,7 +62,9 @@ func (r *Router) handle(ctx *Context) {
 	if n != nil {
 		ctx.Params = params
 		key := ctx.Req.Method + "-" + ctx.Req.URL.Path
-		r.handlers[key](ctx)
+		//r.handlers[key](ctx)
+		ctx.middlewares = append(ctx.middlewares, r.handlers[key])
+		ctx.Next()
 	} else {
 		http.NotFound(ctx.Writer, ctx.Req)
 	}
